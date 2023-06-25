@@ -1,6 +1,6 @@
 steps:
  
-  # Build and push fastapi docker image
+  # Build and push fastapi docker images
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'build'
