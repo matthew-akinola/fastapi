@@ -1,0 +1,14 @@
+steps:
+ 
+  # Build and push Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/forward-server-390416/fastapi:$COMMIT_SHA'
+      - '.'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/forward-server-390416/fastapi:$COMMIT_SHA'
