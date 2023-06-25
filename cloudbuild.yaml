@@ -12,4 +12,4 @@ steps:
     args:
       - 'push'
       - 'gcr.io/forward-server-390416/fastapi:$COMMIT_SHA'
-      - '--logging=none'
+logsBucket: 'my-logs-bucket'
