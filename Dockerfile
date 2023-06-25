@@ -17,9 +17,9 @@ COPY ./requirements.txt requirements.txt
 # Install the requirements.txt file in Docker image
 RUN pip install -r requirements.txt
 
-ENV DEBUG=${DEBUG}
-ENV SERVICE_2_URL=${SERVICE_2_URL}
-ENV SERVICE_ACCOUNT_FILE=${SERVICE_ACCOUNT_FILE}
+# ENV DEBUG=${DEBUG}
+# ENV SERVICE_2_URL=${SERVICE_2_URL}
+# ENV SERVICE_ACCOUNT_FILE=${SERVICE_ACCOUNT_FILE}
 
 # copy the Fastapi project into the container image
 COPY . .
