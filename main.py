@@ -1,50 +1,27 @@
-import google.auth
-from google.auth.transport.requests import Request
-from google.oauth2 import service_account
-import requests
-from dotenv import load_dotenv
 import os
 from fastapi import FastAPI
+import urllib
+import google.auth.transport.requests
+import google.oauth2.id_token
+import uvicorn
 
 app = FastAPI()
-  
 
-@app.on_event("startup")
-async def startup_event():
-    load_dotenv()  
-
-
-SERVICE_2_URL = os.getenv('SERVICE_2_URL')
-SERVICE_ACCOUNT_FILE = os.getenv('SERVICE_ACCOUNT_FILE')
-
-# Load credentials from the service account key file
-credentials = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE)
-
-# Check if the credentials are expired, and refresh if necessary
-if credentials.expired:
-    request = Request()
-    credentials.refresh(request)
-
-# Set the credentials as the default for the Google API client library
-google.auth.default(credentials)
-
-
-
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'tolu-svca.json'
+endpoint = 'https://django-service-3gjvcximaa-uc.a.run.app/blogposts'
+audience = 'https://django-service-3gjvcximaa-uc.a.run.app'
 
 @app.get('/api/blogs/')
 def get_blogs():
-    # Obtain the access token
-    access_token = credentials.token
 
-    # Make a request to Service 2 using the access token
-    headers = {'Authorization': f'Bearer {access_token}'}
-    response = requests.get(SERVICE_2_URL, headers=headers)
-    response.raise_for_status()
-    blogs = response.json()
-    return blogs
+    req = urllib.request.Request(endpoint)
+    auth_req = google.auth.transport.requests.Request()
+    id_token = google.oauth2.id_token.fetch_id_token(auth_req, audience)
 
+    req.add_header("Authorization", f"Bearer {id_token}")
+    response = urllib.request.urlopen(req)
 
+    return response.read()
 
 if __name__ == '__main__':
-    import uvicorn
     uvicorn.run(app, host='0.0.0.0', port=8001)
